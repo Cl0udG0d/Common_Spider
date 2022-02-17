@@ -1,13 +1,31 @@
-# Common_Spider
+# spider脚本
 
-一个还算通用的爬虫脚本，可自己设定爬取的深度，可以把网站的动态链接地址和外链单独分出来，做安全测试时可以提前爬一下页面，避免测试时会有遗漏。
+> 一个爬取页面URL的脚本
 
 
-# Change Log
+在原来项目的基础上进行了魔改，我的需求是传入一个URL之后爬取页面中与它相关的URL
 
-- [2018-07-05] 对爬取时遇到的一些异常进行了优化
-- [2018-04-03] 对域名的处理进行了完善
-  
+为什么不直接使用[crawlergo](https://github.com/Qianlitp/crawlergo)这类项目？虽然crawlergo的爬取已经足够使用了，但需要`-c`指定浏览器。如果我们想要将其合并到自己的项目里面，就很难做到跨平台。
+
+在`github`上面另外的一些项目感觉都不太符合自己的要求，要么就是需要的库文件太多了，所以进行了魔改
+
+魔改主要所作的工作如下：
++ 首先将适用于`python2`的项目升级为`python3`
++ 修改了例如`url_protocol`函数中的错误，`else`逻辑中返回错误协议
+    ```python 
+    def url_protocol(url):
+        domain = re.findall(r'.*(?=://)', url)
+        if domain:
+            return domain[0]
+        else:
+            return url
+    ```
++ 加强了静态文件后缀的过滤正则
++ 去除了一些畸形URL
++ 将命令行输入修改为函数调用
++ ...
+
+
 # Usage
 
 使用比较简单：
@@ -18,23 +36,7 @@
 pip install requests
 ```
 
-运行爬虫
+运行爬虫，调用`spider`函数即可，传入url和爬取深度，默认为`1`，返回`result`为结果列表，更方便将其内嵌到自己的项目里
 
-```
- python2 spider_v3.py  url  5   --> url为待爬取的网站地址，5为爬取深度，可以不设，默认为5。
-```
+![screenshot](img/1.png)
 
-
-# Screenshot
-
-- 扫描过程
-
-![screenshot](pic0.png)
-
-- 扫描结果
-
-![screenshot](pic1.png)
-
-- 外链和动态链接
-
-![screenshot](pic2.png)
